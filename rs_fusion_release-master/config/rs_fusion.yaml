@@ -1,0 +1,14 @@
+lidars_number: 2 # lidar的数量
+lidar_base_topic:  /left/rslidar_points
+lidar_1_topic: /right/rslidar_points
+
+lidar_base_trans_file: trans_params_0.yaml
+lidar_1_trans_file: trans_params_1.yaml
+
+fusion_topic: /fusion_points     #融合后点云的消息名字
+
+motion_compensate: 0    # 运动补偿开关，0 or 1, 等于0时以下参数将被忽略
+imu_topic: /imu 
+imu_z_up: 1    # 1:z up; -1: z down
+odometry_topic: /speed
+odometry_unit: 0   # 0: m/s; 1: km/h;
