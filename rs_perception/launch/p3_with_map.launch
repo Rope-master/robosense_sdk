@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+
+<launch>
+
+<!-- driver /-->
+<group ns="left">
+  <arg name="model" default="RS16" />
+  <arg name="device_ip" default="192.168.1.200" />
+  <arg name="msop_port" default="6699" />
+  <arg name="difop_port" default="7788" />
+  <arg name="lidar_param_path" default="$(find rslidar_pointcloud)/data/rs_lidar_16/"/>
+  <!--arg name="pcap_path" default="$(find rs_perception)/data/p3_demo/left.pcap" /-->
+
+  <node  name="rslidar_node" pkg="rslidar_driver" type="rslidar_node" output="screen" >
+    <param name="model" value="$(arg model)"/>
+    <param name="device_ip" value="$(arg device_ip)" />
+    <param name="msop_port" value="$(arg msop_port)" />
+    <param name="difop_port" value="$(arg difop_port)"/>
+    <!--param name="pcap" value="$(arg pcap_path)" /-->
+  </node>
+
+  <node  name="cloud_node" pkg="rslidar_pointcloud" type="cloud_node" output="screen" >
+    <param name="model" value="$(arg model)"/>
+    <param name="curves_path" value="$(arg lidar_param_path)/curves.csv" />
+    <param name="angle_path" value="$(arg lidar_param_path)/angle.csv" />
+    <param name="channel_path" value="$(arg lidar_param_path)/ChannelNum.csv" />
+    <param name="curves_rate_path" value="$(arg lidar_param_path)/CurveRate.csv" />
+    <remap from="rslidar_packets" to="left/rslidar_packets"/> 
+  </node>
+</group>
+
+<group ns="right">
+  <arg name="model" default="RS16" />
+  <arg name="device_ip" default="192.168.1.200" />
+  <arg name="msop_port" default="6699" />
+  <arg name="difop_port" default="7788" />
+  <arg name="lidar_param_path" default="$(find rslidar_pointcloud)/data/rs_lidar_16/"/>
+  <!--arg name="pcap_path" default="$(find rs_perception)/data/p3_demo/right.pcap" /-->
+
+  <node  name="rslidar_node" pkg="rslidar_driver" type="rslidar_node" output="screen" >
+    <param name="model" value="$(arg model)"/>
+    <param name="device_ip" value="$(arg device_ip)" />
+    <param name="msop_port" value="$(arg msop_port)" />
+    <param name="difop_port" value="$(arg difop_port)"/>
+    <!--param name="pcap" value="$(arg pcap_path)" /-->
+  </node>
+
+  <node  name="cloud_node" pkg="rslidar_pointcloud" type="cloud_node" output="screen" >
+    <param name="model" value="$(arg model)"/>
+    <param name="curves_path" value="$(arg lidar_param_path)/curves.csv" />
+    <param name="angle_path" value="$(arg lidar_param_path)/angle.csv" />
+    <param name="channel_path" value="$(arg lidar_param_path)/ChannelNum.csv" />
+    <param name="curves_rate_path" value="$(arg lidar_param_path)/CurveRate.csv" />
+    <remap from="rslidar_packets" to="right/rslidar_packets"/>
+  </node>
+</group>
+
+<group ns="middle">
+  <arg name="model" default="RS32" />
+  <arg name="device_ip" default="192.168.1.200" />
+  <arg name="msop_port" default="6699" />
+  <arg name="difop_port" default="7788" />
+  <arg name="lidar_param_path" default="$(find rslidar_pointcloud)/data/rs_lidar_32/"/>
+  <!--arg name="pcap_path" default="$(find rs_perception)/data/p3_demo/middle.pcap" /-->
+
+  <node  name="rslidar_node" pkg="rslidar_driver" type="rslidar_node" output="screen" >
+    <param name="model" value="$(arg model)"/>
+    <param name="device_ip" value="$(arg device_ip)" />
+    <param name="msop_port" value="$(arg msop_port)" />
+    <param name="difop_port" value="$(arg difop_port)"/>
+    <!--param name="pcap" value="$(arg pcap_path)" /-->
+  </node>
+
+  <node  name="cloud_node" pkg="rslidar_pointcloud" type="cloud_node" output="screen" >
+    <param name="model" value="$(arg model)"/>
+    <param name="curves_path" value="$(arg lidar_param_path)/curves.csv" />
+    <param name="angle_path" value="$(arg lidar_param_path)/angle.csv" />
+    <param name="channel_path" value="$(arg lidar_param_path)/ChannelNum.csv" />
+    <param name="curves_rate_path" value="$(arg lidar_param_path)/CurveRate.csv" />
+    <remap from="rslidar_packets" to="middle/rslidar_packets"/>
+  </node>
+</group>
+<!-- driver display /-->
+  <!-- node name="rviz" pkg="rviz" type="rviz"  args="-d $(find rslidar_pointcloud)/rviz_cfg/rslidar.rviz" /-->
+
+
+<!--localization /-->
+<!-- varilable -->
+  <arg name="map" default="map_yuanqu.rsmap" />
+  <arg name="parameter_file" default="parameters_32.xml" />
+
+  <node pkg="rs_localization" name="rs_localization" type="rs_localization" output="screen">
+    <param name="map_path" value="$(find rs_perception)/data/GYY/$(arg map)"/>
+    <param name="file_path" value="$(find rs_localization)/cfg/$(arg parameter_file)"/>
+    <param name="use_unit_kmh" value="true" />
+    <param name="log_data" value="false"/>
+    <param name="mode" value="icp"/>
+    <param name="init_mode" value="icp"/>
+    <remap from="middle/rslidar_points" to="rslidar_points"/>
+  </node>
+
+  <node pkg ="rs_localization" name="map_process" type="map_process" output="screen">
+    <param name="global_map_path" value="$(find rs_perception)/data/GYY/$(arg map)"/>
+  </node>
+
+<!--main perception sdk node-->
+
+  <arg name="pcap_path" default="$(find rs_perception)/data/p3_demo/middle.pcap" />
+  <arg name="receiv_ip" default="192.168.1.255" />
+  <arg name="receiv_port" default="60000" />
+  <arg name="args_path" default="$(find rs_perception)/usr_args/perception_args_fuse.xml" />
+  <arg name="lidar_config_path" default="$(find auto_align_tool)/save_config/align.txt" />
+  <arg name="multi_lidar_args_path" default="$(find rs_perception)/multi_lidar" />
+  <arg name="roi_map_path" default="$(find rs_perception)/data/GYY/feature_map" />
+
+  <node pkg="rs_perception" type="p3_test_with_map"  name="p3_test_with_map"  output="screen" >
+    <!--param name="pcap" value="$(arg pcap_path)" /-->
+    <param name="port" value="$(arg msop_port)" />
+    <param name="receiv_ip" value="$(arg receiv_ip)" />
+    <param name="receiv_port" value="$(arg receiv_port)" />  
+    <param name="args_path" value="$(arg args_path)" />
+    <param name="lidar_config_path" value="$(arg lidar_config_path)" />
+    <param name="multi_lidar_args_path" value="$(arg multi_lidar_args_path)"/>
+    <remap from="left/rslidar_points" to="left/rslidar_points"/>
+    <remap from="middle/rslidar_points" to="middle/rslidar_points"/>
+    <remap from="right/rslidar_points" to="right/rslidar_points"/>
+    <remap from="rs_pose" to="rs_pose"/>
+    <remap from="imu" to="imu"/>
+    <param name="roi_map_path" value="$(arg roi_map_path)" />
+  </node>
+
+	<!--display/-->
+<!--car module for ui display-->
+  <group>
+    <arg name="gui" default="False" />
+    <param name="use_gui" value="$(arg gui)"/>
+    <param name="robot_description" textfile="$(find rs_perception)/car_rviz_model/map/default.urdf" />
+    <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher"  />
+    <node pkg="robot_state_publisher" type="state_publisher" name="robot_state_publisher"  />
+  </group>
+
+<!--rviz show-->
+  <node pkg="rviz" type="rviz" name="rviz"  args="-d $(find rs_perception)/cfg/robosense_map_test.rviz"/>
+
+</launch>

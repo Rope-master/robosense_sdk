@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+
+<launch>
+<group ns="left">
+  <node  name="rslidar_node" pkg="rslidar_driver" type="rslidar_node" output="screen" >
+    <param name="model" value="RS16"/>
+    <param name="device_ip" value="192.168.2.200" />
+    <param name="msop_port" value="9966"/>
+    <param name="difop_port" value="8877"/>
+  </node>
+
+  <node  name="cloud_node" pkg="rslidar_pointcloud" type="cloud_node" output="screen" >
+    <param name="model" value="RS16"/>
+    <param name="curves_path" value="$(find rslidar_pointcloud)/data/lidar1/curves.csv" />
+    <param name="angle_path" value="$(find rslidar_pointcloud)/data/lidar1/angle.csv" />
+    <param name="channel_path" value="$(find rslidar_pointcloud)/data/lidar1/ChannelNum.csv" />
+  </node>
+
+  <!--main perception sdk node-->
+  <arg name="receiv_ip" default="192.168.1.255" />
+  <arg name="receiv_port" default="60000" />
+  <arg name="args_path" default="$(find rs_perception)/usr_args/perception_args_16.xml" />
+  <arg name="lidar_config_path" default="$(find auto_align_tool)/save_config/align.txt" />
+  <arg name="roi_map_path" default="$(find rs_perception)/data/GYY/feature_map" />
+
+  <node pkg="rs_perception" type="test_without_map"  name="test_without_map"  output="screen" >
+    <param name="port" value="9966" />
+    <param name="receiv_ip" value="$(arg receiv_ip)" />
+    <param name="receiv_port" value="$(arg receiv_port)" />  
+    <param name="args_path" value="$(arg args_path)" />
+    <param name="lidar_config_path" value="$(arg lidar_config_path)" />
+    <param name="rs_perception_receive_topic" value="/left/rslidar_points" />
+    <param name="rs_perception_publish_topic" value="/left/rs_percept_result" />
+    <!-- <remap from="rslidar_points" to="/rslidar_points"/> -->
+    <!--<remap from="rslidar_points" to="fusion_points"/>-->
+    <!--param name="roi_map_path" value="$(arg roi_map_path)" /-->
+  </node>
+</group>
+
+ <group ns="right">
+  <node  name="rslidar_node" pkg="rslidar_driver" type="rslidar_node" output="screen" >
+    <param name="model" value="RS16"/>
+   
+    <param name="device_ip" value="192.168.1.205"/>
+    <param name="msop_port" value="6699"/>
+    <param name="difop_port" value="7788"/>
+  </node>
+  
+  <node  name="cloud_node" pkg="rslidar_pointcloud" type="cloud_node" output="screen" >
+    <param name="model" value="RS16"/>
+    <param name="curves_path" value="$(find rslidar_pointcloud)/data/lidar2/curves.csv" />
+    <param name="angle_path" value="$(find rslidar_pointcloud)/data/lidar2/angle.csv" />
+    <param name="channel_path" value="$(find rslidar_pointcloud)/data/lidar2/ChannelNum.csv" />
+  </node>
+  
+  <arg name="receiv_ip" default="192.168.1.255" />
+  <arg name="receiv_port" default="70000" />
+  <arg name="args_path" default="$(find rs_perception)/usr_args/perception_args_16.xml" />
+  <arg name="lidar_config_path" default="$(find auto_align_tool)/save_config/align.txt" />
+  <arg name="roi_map_path" default="$(find rs_perception)/data/GYY/feature_map" />
+
+  <node pkg="rs_perception" type="test_without_map"  name="test_without_map"  output="screen" >
+    <param name="port" value="6699" />
+    <param name="receiv_ip" value="$(arg receiv_ip)" />
+    <param name="receiv_port" value="$(arg receiv_port)" />  
+    <param name="args_path" value="$(arg args_path)" />
+    <param name="lidar_config_path" value="$(arg lidar_config_path)" />
+    <param name="rs_perception_receive_topic" value="/right/rslidar_points" />
+    <param name="rs_perception_publish_topic" value="/right/rs_percept_result" />
+  </node>
+</group>
+ 
+<!--rviz show-->
+  <node pkg="rviz" type="rviz" name="rviz"  args="-d $(find rs_perception)/cfg/robosense_no_map_test.rviz"/>
+</launch>

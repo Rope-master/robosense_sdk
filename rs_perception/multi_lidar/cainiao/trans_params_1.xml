@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LidarTrans>
+	<pose>
+		<pos>
+			<x>0.00496581011</x>
+			<y>-0.559809983</y>
+			<z>-0.186711997</z>
+		</pos>
+		<angle>
+			<roll>0.83601898</roll>
+			<pitch>0.000191501997</pitch>
+			<yaw>-0.0146257998</yaw>
+		</angle>
+	</pose>
+</LidarTrans>

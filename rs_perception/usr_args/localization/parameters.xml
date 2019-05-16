@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+
+
+<frame_id_name>
+    <frame_id>rs_odom</frame_id>                 <!--  a world-fixed frame -->
+    <child_frame_id>base_link2</child_frame_id>  <!--  a frame attached to the mobile robot base -->
+</frame_id_name>
+
+<gpsMsg>
+    <sub_gps_topic>/gps</sub_gps_topic>   <!-- GPS Fix topic (sensor_msgs::NavSatFix) -->
+    <pub_gps_topic>/rs_gps_path</pub_gps_topic>  <!-- For Visualize GPS trajectory (nav_msgs::Path) -->
+    <utm_east_offset>218951.128643000004</utm_east_offset>  <!-- UTM offest in X or East direction -->
+    <utm_north_offset> 3337182.074815999717 </utm_north_offset>  <!-- UTM offest in Y or North direction -->
+</gpsMsg>
+
+<mapLoad>
+    <pub_map_topic>/rs_map</pub_map_topic>   <!-- Visualize rs_map (sensor_msgs::PointCloud2) -->
+    <fix_map>1</fix_map>                     <!-- "1" for global map, "0" for local map -->
+</mapLoad>
+
+<main>
+    <sub_points_topic>/rslidar_points</sub_points_topic>  <!-- Lidar points topic(sensor_msgs::PointCloud2) -->
+    <sub_imu_topic>/imu </sub_imu_topic>           <!-- IMU topic (sensor_msgs::Imu) -->
+    <sub_obd_topic>/speed </sub_obd_topic>         <!-- Wheel speed/Encoder etc (nav_msgs::Odometry) -->
+    <pub_path_topic>/rs_path</pub_path_topic>                    <!-- Visualize estimate path (nav_msgs::Path) -->
+    <pub_pose_topic>/rs_pose</pub_pose_topic>                    <!-- Estimate pose (nav_msgs::Odometry) -->
+    <pub_points_topic>/rslidar_points_global</pub_points_topic>  <!--Visualize PointCloud in global frame-->
+</main>

@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+
+<launch>
+
+<!-- driver  /-->
+
+  <!--<node name="control_node" pkg="control_tool" type="control_node"/>-->
+  <!--<node name="save_node" pkg="control_tool" type="save_node"/>-->
+  
+  <!--<arg name="model" default="RS16" />-->
+  <arg name="model" default="RS16" />
+  <arg name="device_ip" default="192.168.1.102" />
+  <arg name="msop_port" default="6699" />
+  <arg name="difop_port" default="7788" />
+  <arg name="lidar_param_path" default="$(find rslidar_pointcloud)/data/rs_lidar_16/"/>
+  <arg name="pcap_path" default="$(find rs_perception)/demo_data/16_demo/lidar.pcap" />
+
+  <node  name="rslidar_node" pkg="rslidar_driver" type="rslidar_node" output="screen" >
+    <param name="model" value="$(arg model)"/>
+     <param name="device_ip" value="$(arg device_ip)" />
+    <param name="msop_port" value="$(arg msop_port)" />
+    <param name="difop_port" value="$(arg difop_port)"/>
+    <!--<param name="pcap" value="$(arg pcap_path)" />-->
+  </node>
+
+  <node  name="cloud_node" pkg="rslidar_pointcloud" type="cloud_node" output="screen" >
+    <param name="model" value="$(arg model)"/>
+    <param name="curves_path" value="$(arg lidar_param_path)/curves.csv" />
+    <param name="angle_path" value="$(arg lidar_param_path)/angle.csv" />
+    <param name="channel_path" value="$(arg lidar_param_path)/ChannelNum.csv" />
+    <remap from="rslidar_packets" to="rslidar_packets"/> 
+  </node>
+
+<!-- driver display /-->
+   <node name="rviz" pkg="rviz" type="rviz"  args="-d $(find rslidar_pointcloud)/rviz_cfg/rslidar.rviz" />
+
+<!--main perception sdk node-->
+  <!--<arg name="receiv_ip" default="192.168.1.255" />
+  <arg name="receiv_port" default="60000" />
+  <arg name="args_path" default="$(find rs_perception)/usr_args/perception_args_16.xml" />
+  <arg name="lidar_config_path" default="$(find auto_align_tool)/save_config/align.txt" />
+  <arg name="roi_map_path" default="$(find rs_perception)/data/GYY/feature_map" />-->
+
+  <!--<node pkg="rs_perception" type="test_without_map"  name="test_without_map"  output="screen" >
+    <param name="pcap" value="$(arg pcap_path)" />
+    <param name="port" value="$(arg msop_port)" />
+    <param name="receiv_ip" value="$(arg receiv_ip)" />
+    <param name="receiv_port" value="$(arg receiv_port)" />  
+    <param name="args_path" value="$(arg args_path)" />
+    <param name="lidar_config_path" value="$(arg lidar_config_path)" />
+    <remap from="rslidar_points" to="rslidar_points"/ -->
+    <!--<remap from="rslidar_points" to="fusion_points"/>-->
+    <!--param name="roi_map_path" value="$(arg roi_map_path)" /-->
+  <!--</node>-->
+
+	<!--display/-->
+  <!--car module for ui display-->
+  <!--<group>
+    <arg name="gui" default="False" />
+    <param name="use_gui" value="$(arg gui)"/>
+    <param name="robot_description" textfile="$(find rs_perception)/car_rviz_model/no_map/default.urdf" />
+    <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher"  />
+    <node pkg="robot_state_publisher" type="state_publisher" name="robot_state_publisher"  />
+  </group>-->
+
+<!--rviz show-->
+  <!--<node pkg="rviz" type="rviz" name="rviz"  args="-d $(find rs_perception)/cfg/robosense_no_map_test.rviz"/>-->
+
+</launch>
+

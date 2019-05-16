@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RoboUsrConfig>
+	<lidar_type>
+		<name>RS16</name> <!--lidar device name/-->
+		<hori_resolution>0.18</hori_resolution> <!--lidar horizontal resolution with degree unit/-->
+		<vert_resolution>2</vert_resolution> <!--lidar vertical resolution with degree unit/-->
+	</lidar_type>
+	<work_mode>0</work_mode> <!--0: usual mode,1: highway mode, only capable when "detection_mode"=1/-->
+	<detection_mode>0</detection_mode> <!--0: traditional, 1: traditional + deeplearning, 2: deeplearning/-->
+	<obj_limit> <!-- object geometry restrictions for detection geometry filtering, smaller ones will be kept /-->
+		<obj_max_height>4.5</obj_max_height>
+		<obj_size_height>4</obj_size_height>
+		<obj_size_length>20</obj_size_length>
+		<obj_size_width>4</obj_size_width>
+		<obj_length_width_ratio>10</obj_length_width_ratio>
+		<obj_max_area>50</obj_max_area>
+	</obj_limit>
+	<use_geo_filter>true</use_geo_filter> <!--enable geometry filtering or not, if true, huge obctacles like buidings will be filtered out/-->
+	<use_auto_align>true</use_auto_align> <!--enable automatical leveling or not, considering vehicle bumping when moving/-->
+	<ground_range> <!--ground detection range/-->
+		<xmin>-50</xmin>
+		<xmax>50</xmax>
+		<ymin>-30</ymin>
+		<ymax>30</ymax>
+	</ground_range>
+	<detect_range> <!--obstacle detection range/-->
+		<xmin>-60</xmin>
+		<xmax>120</xmax>
+		<ymin>-30</ymin>
+		<ymax>30</ymax>
+	</detect_range>
+	<kernel_range> <!--kenel perception range, means detection with a higher confidence than the outer zone, always smaller than the "detection_range", if not, it will be truncated/-->
+		<xmin>-60</xmin>
+		<xmax>60</xmax>
+		<ymin>-30</ymin>
+		<ymax>30</ymax>
+	</kernel_range>
+	<ignore_range>
+		<xmin>-2.3</xmin>
+		<xmax>2.3</xmax>
+		<ymin>-1.2</ymin>
+		<ymax>1.2</ymax>
+	</ignore_range> <!--points with it will be ignored, considering if need to cut the lidar carrier-vehicle itself/-->
+	<detect_thd>0.5</detect_thd> <!--obstacle detect confidence lower then the threshold will be discard, only capable when "detecion_mode">0/-->
+	<min_pts_num>3</min_pts_num> <!--obstacle with fewer points number then the threshold will be discard/-->
+	<is_upper_detect>true</is_upper_detect> <!--determine if need to detect higher space with traditional mode (>2.0 meters from the ground, by default) or not/-->
+	<use_tracking>true</use_tracking> <!--enable tracking module or not, may close to save computing power, notice that if set false, some optimization depend on tracking will also be uncapable/-->
+	<predict_time>0.5</predict_time> <!--tracking parameter, setting how much time to predict when tracked obstacle get lost (shaded or move out of lidar range)/-->
+	<history_num>10</history_num> <!--tracking parameter, setting how many historical tracking infomation will be kept for a tracker, the length will disturb the sequence analyzing for estimating the robustness for a tracker/-->
+	<use_classification>true</use_classification> <!--enable classification or not, may close to save computing power/-->
+	<with_enhance>false</with_enhance> <!--enable classification enhancement or not/-->
+</RoboUsrConfig>
